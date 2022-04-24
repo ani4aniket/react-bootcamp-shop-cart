@@ -1,25 +1,60 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import "./App.css";
+import Navbar from "./components/Navbar";
+import Counters from "./components/Counters";
 
 function App() {
+  const [counters, setCounters] = useState([
+    { id: 1, value: 0 },
+    { id: 2, value: 0 },
+    { id: 3, value: 0 },
+    { id: 4, value: 0 },
+  ]);
+
+  const handleReset = () => {
+    const countersCopy = [...counters];
+    const resettedCounters = countersCopy.map((c) => ({ ...c, value: 0 }));
+    setCounters(resettedCounters);
+  };
+
+  const handleIncrement = (id: number) => {
+    const newCounters = [...counters];
+    newCounters.find((c) => c.id === id)!.value++;
+    console.log(newCounters);
+    setCounters(newCounters);
+  };
+
+  const handleDecrement = (id: number) => {
+    const newCounters = [...counters];
+    newCounters.find((c) => c.id === id)!.value--;
+    console.log(newCounters);
+    setCounters(newCounters);
+  };
+
+  const handleDelete = (id: number) => {
+    const countersCopy = [...counters];
+    const remainingCounters = countersCopy.filter((c) => c.id !== id);
+    setCounters(remainingCounters);
+  };
+
+  // const calculateTotal = () => {
+  //   return counters.filter((c) => c.value > 0).length;
+  // };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <Navbar
+        totalCount={counters.filter((c) => c.value > 0).length}
+        title="Items"
+      />
+      <Counters
+        counters={counters}
+        handleReset={handleReset}
+        handleIncrement={handleIncrement}
+        handleDecrement={handleDecrement}
+        handleDelete={handleDelete}
+      />
+    </>
   );
 }
 
